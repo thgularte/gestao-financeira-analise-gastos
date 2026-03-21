@@ -1,26 +1,27 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 
 @Injectable()
 export class CardsService {
-  create(createCardDto: CreateCardDto) {
-    return 'This action adds a new card';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createCardDto: CreateCardDto) {
+    return this.prisma.card.create({
+      data: {
+        name: createCardDto.name,
+        limit: createCardDto.limit,
+        closing_day: createCardDto.closing_day,
+        user_id: createCardDto.user_id, // associando ao usuário
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all cards`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} card`;
-  }
-
-  update(id: number, updateCardDto: UpdateCardDto) {
-    return `This action updates a #${id} card`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} card`;
+  async update(id: string, updateCardDto: UpdateCardDto) {
+    return this.prisma.card.update({
+      where: { id_card: id },
+      data: { ...updateCardDto },
+    });
   }
 }
