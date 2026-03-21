@@ -8,6 +8,7 @@ export class TransactionsService {
   constructor(private prisma: PrismaService) {} // construtor para injetar o PrismaService
 
   create(createTransactionDto: CreateTransactionDto) {
+    console.log('Criando transação:', createTransactionDto);
     return this.prisma.transaction.create({
       data: {
         title: createTransactionDto.title,

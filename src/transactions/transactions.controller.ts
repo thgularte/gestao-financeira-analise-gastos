@@ -19,9 +19,8 @@ export class TransactionsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto, @Req() req) {
-    // sobrescreve o user_id com o do token
-    createTransactionDto.user_id = req.user.id_user;
+  create(@Body() createTransactionDto: CreateTransactionDto) {
+    console.log('Recebendo solicitação para criar transação:', createTransactionDto);
     return this.transactionsService.create(createTransactionDto);
   }
 
