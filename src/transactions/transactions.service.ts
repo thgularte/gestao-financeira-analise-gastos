@@ -13,12 +13,26 @@ export class TransactionsService {
         title: createTransactionDto.title,
         amount: createTransactionDto.amount,
         type: createTransactionDto.type,
-        date: createTransactionDto.date,
+        date: new Date(createTransactionDto.date),
         category_id: createTransactionDto.category_id,
         card_id: createTransactionDto.card_id,
         payment_method: createTransactionDto.payment_method,
         user_id: createTransactionDto.user_id,
       },
+    });
+  }
+
+  getExpenses(user_id: string) {
+    return this.prisma.transaction.findMany({
+      where: { user_id, type: 'expense' },
+      orderBy: { date: 'desc' },
+    });
+  }
+
+  getIncome(user_id: string) {
+    return this.prisma.transaction.findMany({
+      where: { user_id, type: 'income' },
+      orderBy: { date: 'desc' },
     });
   }
 
@@ -37,5 +51,4 @@ export class TransactionsService {
       },
     });
   }
-
 }

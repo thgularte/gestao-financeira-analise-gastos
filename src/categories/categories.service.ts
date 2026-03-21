@@ -17,7 +17,12 @@ export class CategoriesService {
     });
   }
 
-  // opcional, exemplo de update
+  async findAll(userId: string) {
+    return this.prisma.category.findMany({
+      where: { user_id: userId }, 
+    });
+  }
+
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     return this.prisma.category.update({
       where: { id_category: id },

@@ -12,6 +12,11 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
+  @Get(':userId')
+  findAll(@Param('userId') userId: string) {
+    return this.categoriesService.findAll(userId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.update(id, updateCategoryDto);
