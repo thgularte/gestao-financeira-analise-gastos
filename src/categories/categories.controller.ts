@@ -13,12 +13,17 @@ export class CategoriesController {
   }
 
   @Get(':userId')
-  findAll(@Param('userId') userId: string) {
-    return this.categoriesService.findAll(userId);
+  findCategoriesUser(@Param('userId') userId: string) {
+    return this.categoriesService.getCategoriesUser(userId);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.update(id, updateCategoryDto);
   }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.categoriesService.remove(id);
+  } 
 }

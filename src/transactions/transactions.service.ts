@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,7 +8,6 @@ export class TransactionsService {
   constructor(private prisma: PrismaService) {} // construtor para injetar o PrismaService
 
   create(createTransactionDto: CreateTransactionDto) {
-    console.log('Criando transação:', createTransactionDto);
     return this.prisma.transaction.create({
       data: {
         title: createTransactionDto.title,
@@ -49,6 +48,29 @@ export class TransactionsService {
         card_id: updateTransactionDto.card_id,
         payment_method: updateTransactionDto.payment_method,
         user_id: updateTransactionDto.user_id,
+      },
+    });
+  }
+
+  async remove(id: string, userIdFromToken: string) {
+
+    const transaction = await this.prisma.transaction.findUnique({
+      where: {
+        id_transaction: id,
+      },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Transação não encontrada');
+    }
+
+    if (transaction.user_id !== userIdFromToken) {
+      throw new ForbiddenException('Você não pode excluir esta transação');
+    }
+
+    return await this.prisma.transaction.delete({
+      where: {
+        id_transaction: id,
       },
     });
   }

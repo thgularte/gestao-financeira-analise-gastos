@@ -44,8 +44,13 @@ export class UsersController {
     return this.usersService.getByEmail(email);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto,@Req() req: any) {
+    const userIdFromToken = req.user['id'];
+    if (userIdFromToken !== id) {
+      throw new ForbiddenException('Você não pode acessar este recurso');
+    }
     return this.usersService.update(id, updateUserDto);
   }
 

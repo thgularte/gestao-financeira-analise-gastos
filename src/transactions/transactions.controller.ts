@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   Req,
+  Delete,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
@@ -20,21 +21,20 @@ export class TransactionsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createTransactionDto: CreateTransactionDto) {
-    console.log('Recebendo solicitação para criar transação:', createTransactionDto);
     return this.transactionsService.create(createTransactionDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('expenses')
   getMyExpenses(@Req() req) {
-    const userId = req.user.id_user;
+    const userId = req.user.id;
     return this.transactionsService.getExpenses(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('income')
   getMyIncome(@Req() req) {
-    const userId = req.user.id_user;
+    const userId = req.user.id;
     return this.transactionsService.getIncome(userId);
   }
 
@@ -46,7 +46,14 @@ export class TransactionsController {
     @Req() req,
   ) {
     // evita que um usuário atualize transações de outro
-    updateTransactionDto.user_id = req.user.id_user;
+    updateTransactionDto.user_id = req.user.id;
     return this.transactionsService.update(id, updateTransactionDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  remove(@Param('id') id: string, @Req() req: any) {
+    const userIdFromToken = req.user.id;
+    return this.transactionsService.remove(id, userIdFromToken);
   }
 }

@@ -18,10 +18,22 @@ export class CardsService {
     });
   }
 
+  async findCardsUser(userId: string) {
+    return this.prisma.card.findMany({
+      where: { user_id: userId },
+    });
+  }
+
   async update(id: string, updateCardDto: UpdateCardDto) {
     return this.prisma.card.update({
       where: { id_card: id },
       data: { ...updateCardDto },
     });
   }
+
+  async remove(id: string) {
+    return this.prisma.card.delete({
+      where: { id_card: id },
+    });
+  } 
 }

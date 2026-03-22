@@ -17,7 +17,7 @@ export class CategoriesService {
     });
   }
 
-  async findAll(userId: string) {
+  async getCategoriesUser(userId: string) {
     return this.prisma.category.findMany({
       where: { user_id: userId }, 
     });
@@ -27,6 +27,11 @@ export class CategoriesService {
     return this.prisma.category.update({
       where: { id_category: id },
       data: { ...updateCategoryDto },
+    });
+  }
+  async remove(id: string) {
+    return this.prisma.category.delete({
+      where: { id_category: id },
     });
   }
 }
